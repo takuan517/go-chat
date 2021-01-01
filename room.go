@@ -8,14 +8,24 @@ import (
 )
 
 type room struct {
-	// forwardは他のクライアントに転送するためのメッセージを保持するチャンネルです。
+	// forwardは他のクライアントに転送するためのメッセージを保持するチャンネル
 	forward chan []byte
-	//joinはチャットルームに参加しようとしているクライアントのためのチャンネルです。
+	//joinはチャットルームに参加しようとしているクライアントのためのチャンネル
 	join chan *client
-	//leaveはチャットルームから退出しようとしているクライアントのためのチャンネルです。
+	//leaveはチャットルームから退出しようとしているクライアントのためのチャンネル
 	leave chan *client
-	//clientsに在室している全てのクライアントが保持されます。
+	//clientsに在室している全てのクライアントが保持される
 	clients map[*client]bool
+}
+
+// newRoomはすぐに利用できるチャットルームを生成して返す。
+func newRoom() *room {
+	return &room{
+		forward: make(chan []byte),
+		join:    make(chan *client),
+		leave:   make(chan *client),
+		clients: make(map[*client]bool),
+	}
 }
 
 func (r *room) run() {
